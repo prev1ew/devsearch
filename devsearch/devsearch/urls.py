@@ -8,7 +8,7 @@ def home_page(request):
 
 
 urlpatterns = [
-    path('', home_page),
+    # path('', home_page),
     path('admin/', admin.site.urls),
     path('', include('projects.urls'))
 
