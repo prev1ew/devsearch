@@ -1,9 +1,11 @@
 {% extends 'main.html' %}}
 
 {% block content %}
+
+<img style="max-width: 500px" src="{{ project.featured_image.url }}" alt="">
+
 <p>{{project.title}}</p>
 {% for tag in tags %}
 <span>{{tag}}</span>
 {% endfor %}
 {% endblock content %}
- 
