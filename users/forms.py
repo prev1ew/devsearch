@@ -12,7 +12,7 @@ class CustomUserCreation(UserCreationForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(CustomUserCreation, self).__init__()
+        super(CustomUserCreation, self).__init__(*args, **kwargs)
 
         for name, field in self.fields.items():
             field.widget.attrs.update({
