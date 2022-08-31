@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save, post_delete
 from .models import Profile
+from django.contrib.auth.models import User
 
 
 def create_profile(sender, instance, created, **kwargs):
-    print('test')
     if created:
         user = instance
         profile = Profile.objects.create(
@@ -19,5 +19,5 @@ def delete_user(sender, instance, **kwargs):
     user.delete()
 
 
-post_save.connect(create_profile, sender=Profile)
+post_save.connect(create_profile, sender=User)
 post_delete.connect(delete_user, sender=Profile)
