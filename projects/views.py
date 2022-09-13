@@ -5,7 +5,6 @@ from .forms import ProjectForm
 
 
 def projects(request):
-
     projects_data = Project.objects.all()
     context = {'projects': projects_data}
     return render(request, 'projects/projects.html', context)
@@ -21,12 +20,15 @@ def project(request, pk):
 
 @login_required(login_url='login')
 def create_project(request):
+    profile = request.user.profile
     form = ProjectForm()
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            curr_project = form.save(commit=False)
+            curr_project.owner = profile
+            curr_project.save()
             return redirect('projects')
 
     context = {'form': form}
@@ -35,7 +37,8 @@ def create_project(request):
 
 @login_required(login_url='login')
 def update_project(request, pk):
-    curr_project = Project.objects.get(id=pk)
+    profile = request.user.profile
+    curr_project = profile.project_set.get(id=pk)
     form = ProjectForm(instance=curr_project)
 
     if request.method == 'POST':
@@ -50,7 +53,8 @@ def update_project(request, pk):
 
 @login_required(login_url='login')
 def delete_project(request, pk):
-    curr_project = Project.objects.get(id=pk)
+    profile = request.user.profile
+    curr_project = profile.project_set.get(id=pk)
 
     if request.method == 'POST':
         curr_project.delete()
