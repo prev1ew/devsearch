@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .models import Profile
 from django.contrib.auth.models import User
-from .forms import CustomUserCreation, ProfileForm
+from .forms import CustomUserCreation, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -106,3 +106,53 @@ def edit_account(request):
             return redirect('account')
     content = {'form': form}
     return render(request, 'users/profile_form.html', content)
+
+
+@login_required(login_url="login")
+def create_skill(request):
+    profile = request.user.profile
+    form = SkillForm()
+
+    if request.method == 'POST':
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            curr_skill = form.save(commit=False)
+            curr_skill.owner = profile
+            curr_skill.save()
+            messages.success(request, 'Skill was added successfully')
+            return redirect('account')
+
+    content = {'form': form}
+    return render(request, 'users/skill_form.html', content)
+
+
+@login_required(login_url="login")
+def update_skill(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    form = SkillForm(instance=skill)
+
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance=skill)
+        if form.is_valid():
+            # curr_skill = form.save(commit=False)
+            # curr_skill.owner = profile
+            # curr_skill.save()
+            form.save()
+            messages.success(request, 'Skill was updated')
+            return redirect('account')
+
+    content = {'form': form}
+    return render(request, 'users/skill_form.html', content)
+
+
+@login_required(login_url="login")
+def delete_skill(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    content = {'object': skill}
+    if request.method == 'POST':
+        skill.delete()
+        messages.success(request, 'Skill was deleted')
+        return redirect('account')
+    return render(request, 'delete_template.html', content)
