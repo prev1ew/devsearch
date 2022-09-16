@@ -5,11 +5,13 @@ from .models import Profile
 from django.contrib.auth.models import User
 from .forms import CustomUserCreation, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required
+from .utils import search_profiles
 
 
 def profiles(request):
-    profiles_data = Profile.objects.all()
-    context = {'profiles': profiles_data}
+    profiles_data, search_query = search_profiles(request)
+    context = {'profiles': profiles_data,
+               'search_query': search_query}
     return render(request, 'users/profiles.html', context)
 
 
