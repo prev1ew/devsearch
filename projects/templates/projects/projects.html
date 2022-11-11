@@ -47,8 +47,8 @@
 
                                     {% for tag in project.tags.all %}
                                     <span class="tag tag--pill tag--main">
-                      <small>{{tag}}</small>
-                    </span>
+                                          <small>{{tag}}</small>
+                                    </span>
                                     {% endfor %}
 
                                 </div>
@@ -62,6 +62,9 @@
             </div>
         </div>
     </section>
+
+    {% include 'pagination.html' with queryset=projects custom_range=custom_range%}
+
 </main>
 
 {% endblock content %}

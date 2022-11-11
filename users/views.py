@@ -5,13 +5,18 @@ from .models import Profile
 from django.contrib.auth.models import User
 from .forms import CustomUserCreation, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required
-from .utils import search_profiles
+from .utils import search_profiles, paginate_profiles
 
 
 def profiles(request):
     profiles_data, search_query = search_profiles(request)
+
+    custom_range, profiles_data = paginate_profiles(request, profiles_data, 6)
+
     context = {'profiles': profiles_data,
-               'search_query': search_query}
+               'search_query': search_query,
+               'custom_range': custom_range,
+               }
     return render(request, 'users/profiles.html', context)
 
 
